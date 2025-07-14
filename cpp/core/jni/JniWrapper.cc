@@ -474,6 +474,7 @@ JNIEXPORT jlong JNICALL Java_org_apache_gluten_vectorized_ColumnarBatchOutIterat
   if (!iter->hasNext()) {
     return kInvalidObjectHandle;
   }
+  LOG(DEBUG) << __func__ << " call ColumnarBatchOutIterator_nativeNext";
 
   std::shared_ptr<ColumnarBatch> batch = iter->next();
   auto batchHandle = ctx->saveObject(batch);
