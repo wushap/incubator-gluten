@@ -95,6 +95,7 @@ class JniReadFile : public facebook::velox::ReadFile {
     env->CallVoidMethod(
         obj_, jniReadFilePread, static_cast<jlong>(offset), static_cast<jlong>(length), reinterpret_cast<jlong>(buf));
     checkException(env);
+    LOG(DEBUG) << __func__ << " offset:" << offset << " length:" << length;
     return std::string_view(reinterpret_cast<const char*>(buf));
   }
 
@@ -300,6 +301,7 @@ class JniFileSystem : public facebook::velox::filesystems::FileSystem {
     jobject obj = env->CallObjectMethod(obj_, jniFileSystemOpenFileForRead, createJString(env, path));
     checkException(env);
     auto out = std::make_unique<JniReadFile>(obj);
+    LOG(DEBUG) << __func__ << "openFileForRead:" << path;
     return out;
   }
 
@@ -336,6 +338,7 @@ class JniFileSystem : public facebook::velox::filesystems::FileSystem {
     attachCurrentThreadAsDaemonOrThrow(vm, &env);
     bool out = env->CallBooleanMethod(obj_, jniFileSystemExists, createJString(env, path));
     checkException(env);
+    LOG(DEBUG) << __func__ << "FileSystemExists:" << path;
     return out;
   }
 
